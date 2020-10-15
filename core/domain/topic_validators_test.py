@@ -42,10 +42,11 @@ USER_EMAIL = 'useremail@example.com'
 USER_NAME = 'username'
 
 (
-    skill_models, story_models, subtopic_models, topic_models, user_models
+    skill_models, story_models, subtopic_models, topic_models, user_models,
+    recommendations_models
 ) = models.Registry.import_models([
     models.NAMES.skill, models.NAMES.story, models.NAMES.subtopic,
-    models.NAMES.topic, models.NAMES.user
+    models.NAMES.topic, models.NAMES.user, models.NAMES.recommendations
 ])
 
 
@@ -237,8 +238,6 @@ class TopicSimilaritiesModelValidatorTests(test_utils.AuditJobsTestBase):
 
         self.run_job_and_check_output(
             expected_output, sort=False, literal_eval=False)
-
-
 
 
 class TopicModelValidatorTests(test_utils.AuditJobsTestBase):

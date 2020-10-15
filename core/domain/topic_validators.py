@@ -20,6 +20,7 @@ from __future__ import absolute_import  # pylint: disable=import-only-modules
 from __future__ import unicode_literals  # pylint: disable=import-only-modules
 
 from core.domain import base_model_validators
+from core.domain import recommendations_services
 from core.domain import topic_domain
 from core.domain import topic_fetchers
 from core.domain import topic_services
@@ -28,11 +29,11 @@ import python_utils
 
 (
     base_models, topic_models, user_models, subtopic_models, story_models,
-    skill_models
+    skill_models, recommendations_models
 ) = models.Registry.import_models([
     models.NAMES.base_model, models.NAMES.topic,
     models.NAMES.user, models.NAMES.subtopic, models.NAMES.story,
-    models.NAMES.skill
+    models.NAMES.skill, models.NAMES.recommendations
 ])
 
 
