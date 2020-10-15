@@ -51,7 +51,6 @@ from core.domain import story_services
 from core.domain import subscription_services
 from core.domain import subtopic_page_domain
 from core.domain import topic_domain
-from core.domain import topic_fetchers
 from core.domain import topic_services
 from core.domain import user_query_services
 from core.domain import user_services
