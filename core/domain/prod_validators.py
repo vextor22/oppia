@@ -4728,3 +4728,82 @@ class SubtopicPageModelValidator(base_model_validators.BaseModelValidator):
     @classmethod
     def _get_custom_validation_functions(cls):
         return []
+
+
+class SubtopicPageSnapshotMetadataModelValidator(
+        base_model_validators.BaseSnapshotMetadataModelValidator):
+    """Class for validating SubtopicPageSnapshotMetadataModel."""
+
+    EXTERNAL_MODEL_NAME = 'subtopic page'
+
+    @classmethod
+    def _get_model_id_regex(cls, unused_item):
+        return '^[A-Za-z0-9]{1,%s}-\\d*-\\d*$' % base_models.ID_LENGTH
+
+    @classmethod
+    def _get_change_domain_class(cls, unused_item):
+        return subtopic_page_domain.SubtopicPageChange
+
+    @classmethod
+    def _get_external_id_relationships(cls, item):
+        return [
+            base_model_validators.ExternalModelFetcherDetails(
+                'subtopic_page_ids',
+                subtopic_models.SubtopicPageModel,
+                [item.id[:item.id.rfind(base_models.VERSION_DELIMITER)]]),
+            base_model_validators.ExternalModelFetcherDetails(
+                'committer_ids', user_models.UserSettingsModel,
+                [item.committer_id])]
+
+
+class SubtopicPageSnapshotContentModelValidator(
+        base_model_validators.BaseSnapshotContentModelValidator):
+    """Class for validating SubtopicPageSnapshotContentModel."""
+
+    EXTERNAL_MODEL_NAME = 'subtopic page'
+
+    @classmethod
+    def _get_model_id_regex(cls, unused_item):
+        return '^[A-Za-z0-9]{1,%s}-\\d*-\\d*$' % base_models.ID_LENGTH
+
+    @classmethod
+    def _get_external_id_relationships(cls, item):
+        return [
+            base_model_validators.ExternalModelFetcherDetails(
+                'subtopic_page_ids',
+                subtopic_models.SubtopicPageModel,
+                [item.id[:item.id.rfind(base_models.VERSION_DELIMITER)]])]
+
+
+class SubtopicPageCommitLogEntryModelValidator(
+        base_model_validators.BaseCommitLogEntryModelValidator):
+    """Class for validating SubtopicPageCommitLogEntryModel."""
+
+    EXTERNAL_MODEL_NAME = 'subtopic page'
+
+    @classmethod
+    def _get_model_id_regex(cls, item):
+        # Valid id: [subtopicpage]-[subtopic_id]-[subtopic_version].
+        regex_string = '^(subtopicpage)-%s-\\d*$' % (
+            item.subtopic_page_id)
+
+        return regex_string
+
+    @classmethod
+    def _get_change_domain_class(cls, item):
+        if item.id.startswith('subtopicpage'):
+            return subtopic_page_domain.SubtopicPageChange
+        else:
+            cls._add_error(
+                'model %s' % base_model_validators.ERROR_CATEGORY_ID_CHECK,
+                'Entity id %s: Entity id does not match regex pattern' % (
+                    item.id))
+            return None
+
+    @classmethod
+    def _get_external_id_relationships(cls, item):
+        return [
+            base_model_validators.ExternalModelFetcherDetails(
+                'subtopic_page_ids',
+                subtopic_models.SubtopicPageModel,
+                [item.subtopic_page_id])]
